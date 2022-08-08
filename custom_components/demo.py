@@ -19,7 +19,7 @@ import logging
 import pprint
 import sys
 
-from eufy_robovac.robovac import Robovac
+from eufy_vacuum.robovac import Robovac
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -33,17 +33,24 @@ async def connected_callback(message, device):
 async def cleaning_started_callback(message, device):
     print("Cleaning started.")
 
+async def clean_callback(message, device):
+    print("Clean!")
+    print(message)
+    
+    
 
 async def async_main(device_id, ip, local_key=None, *args, **kwargs):
     r = Robovac(device_id, ip, local_key, *args, **kwargs)
+
     await r.async_connect(connected_callback)
+
     await asyncio.sleep(1)
-    print("Starting cleaning...")
-    await r.async_start_cleaning(cleaning_started_callback)
+
+    await r.async_get_map_data(clean_callback)
+    #await r.async_clean_rooms([8], 2, clean_callback)
+    
     await asyncio.sleep(5)
-    print("Pausing...")
-    r.play_pause = False
-    await asyncio.sleep(1)
+
     print("Disconnecting...")
     await r.async_disconnect()
 
@@ -52,7 +59,7 @@ def main(*args, **kwargs):
     if not args:
         args = sys.argv[1:]
     asyncio.run(async_main(*args, **kwargs))
-
+    
 
 if __name__ == '__main__':
     main(*sys.argv[1:])
