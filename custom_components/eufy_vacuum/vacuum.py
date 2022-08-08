@@ -1,5 +1,8 @@
 """Support for Eufy vacuum cleaners."""
+from __future__ import annotations
+
 import logging
+from typing import Any
 
 from homeassistant.components.vacuum import (
     PLATFORM_SCHEMA,
@@ -7,7 +10,7 @@ from homeassistant.components.vacuum import (
     STATE_ERROR,
     SUPPORT_BATTERY, SUPPORT_CLEAN_SPOT, SUPPORT_FAN_SPEED, SUPPORT_LOCATE,
     SUPPORT_PAUSE, SUPPORT_RETURN_HOME, SUPPORT_STATUS, SUPPORT_START,
-    SUPPORT_TURN_ON, SUPPORT_TURN_OFF,
+    SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_SEND_COMMAND
     VacuumEntity)
 
 
@@ -31,14 +34,23 @@ FAN_SPEEDS = {
 SUPPORT_ROBOVAC_T2118 = (
     SUPPORT_BATTERY | SUPPORT_CLEAN_SPOT | SUPPORT_FAN_SPEED | SUPPORT_LOCATE |
     SUPPORT_PAUSE | SUPPORT_RETURN_HOME | SUPPORT_START | SUPPORT_STATUS |
-    SUPPORT_TURN_OFF | SUPPORT_TURN_ON
+    SUPPORT_TURN_OFF | SUPPORT_TURN_ON  
 )
 
+SUPPORT_ROBOVAC_T218X = (
+    SUPPORT_BATTERY | SUPPORT_CLEAN_SPOT | SUPPORT_FAN_SPEED | SUPPORT_LOCATE |
+    SUPPORT_PAUSE | SUPPORT_RETURN_HOME | SUPPORT_START | SUPPORT_STATUS |
+    SUPPORT_TURN_OFF | SUPPORT_TURN_ON | SUPPORT_SEND_COMMAND  
+)
 
 MODEL_CONFIG = {
     'T2118': {
         'fan_speeds': FAN_SPEEDS,
         'support': SUPPORT_ROBOVAC_T2118
+    },
+    'T218X': {
+        'fan_speeds': FAN_SPEEDS,
+        'support': SUPPORT_ROBOVAC_T218X
     }
 }
 
@@ -179,3 +191,16 @@ class EufyVacuum(VacuumEntity):
             await self.async_pause()
         else:
             await self.async_play()
+            
+    async def async_send_command(
+        self, command: str, params: dict | list | None = None, **kwargs: Any
+    ) -> None:
+        """Send a command to a vacuum cleaner.
+        This method must be run in the event loop.
+        """
+        if command == "roomClean":
+            roomIds = params.get("roomIds", [1])
+            count = params.get("count", 1)
+
+            await self.robovac.async_clean_rooms(roomIds, count)
+        
