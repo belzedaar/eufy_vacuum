@@ -15,6 +15,9 @@
 # limitations under the License.
 
 import logging
+import base64
+import json
+import time
 
 from .property import DeviceProperty, StringEnum
 from .tuya import TuyaDevice
@@ -29,7 +32,7 @@ class WorkMode(StringEnum):
     SMALL_ROOM = 'SmallRoom'
     EDGE = 'Edge'
     SPOT = 'Spot'
-
+    ROOM = 'room'
 
 class Direction(StringEnum):
     LEFT = 'left'
@@ -72,6 +75,9 @@ class ErrorCode(StringEnum):
     S_BRUSH_STUCK = 'S_brush_stuck'
 
 
+def current_milli_time():
+    return round(time.time() * 1000)
+
 class Robovac(TuyaDevice):
     """Represents a generic Eufy Robovac."""
 
@@ -85,6 +91,8 @@ class Robovac(TuyaDevice):
     FIND_ROBOT = '103'
     BATTERY_LEVEL = '104'
     ERROR_CODE = '106'
+    GET_MAP_DATA = '121'
+    CALL_METHOD = '124'
 
     power = DeviceProperty(POWER)
     play_pause = DeviceProperty(PLAY_PAUSE)
@@ -117,3 +125,20 @@ class Robovac(TuyaDevice):
 
     async def async_set_clean_speed(self, clean_speed, callback=None):
         await self.async_set({self.CLEAN_SPEED: str(clean_speed)}, callback)
+
+    async def async_get_map_data(self, callback=None):
+        map_request = { "type" : "mapData", "id" : self.device_id, "timestamp" : current_milli_time() }
+        json_str = json.dumps(map_request, separators=(',',':'))
+        base64_str = base64.b64encode(json_str.encode("utf8")).decode("utf8")
+        await self.async_set({self.GET_MAP_DATA : base64_str}, callback)
+    
+    async def async_invoke_method(self, method, data, callback=None):
+        method_call = { "method" : method, "data" : data}
+        json_str = json.dumps(method_call, separators=(',',':'))
+        base64_str = base64.b64encode(json_str.encode("utf8")).decode("utf8")
+        await self.async_set({self.CALL_METHOD : base64_str}, callback)
+
+    async def async_clean_rooms(self, room_list, count=1, callback=None):
+        clean_request = { "roomIds" : room_list, "cleanTimes" : count }
+        await self.async_invoke_method("selectRoomsClean", clean_request)
+        

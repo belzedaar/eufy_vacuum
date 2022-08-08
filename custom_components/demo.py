@@ -46,8 +46,8 @@ async def async_main(device_id, ip, local_key=None, *args, **kwargs):
 
     await asyncio.sleep(1)
 
-    await r.async_get_map_data(clean_callback)
-    #await r.async_clean_rooms([8], 2, clean_callback)
+    #await r.async_get_map_data(clean_callback)
+    await r.async_clean_rooms([2], 1, clean_callback)
     
     await asyncio.sleep(5)
 
