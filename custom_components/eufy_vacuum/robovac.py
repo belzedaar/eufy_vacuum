@@ -93,6 +93,7 @@ class Robovac(TuyaDevice):
     ERROR_CODE = '106'
     GET_MAP_DATA = '121'
     CALL_METHOD = '124'
+    MANUAL_CONTROL = '131'
 
     power = DeviceProperty(POWER)
     play_pause = DeviceProperty(PLAY_PAUSE)
@@ -104,6 +105,7 @@ class Robovac(TuyaDevice):
     find_robot = DeviceProperty(FIND_ROBOT)
     battery_level = DeviceProperty(BATTERY_LEVEL, read_only=True)
     error_code = DeviceProperty(ERROR_CODE, ErrorCode, True)
+    manual_control = DeviceProperty(MANUAL_CONTROL)
 
     async def async_play(self, callback=None):
         await self.async_set({self.PLAY_PAUSE: True}, callback)
@@ -133,7 +135,7 @@ class Robovac(TuyaDevice):
         await self.async_set({self.GET_MAP_DATA : base64_str}, callback)
     
     async def async_invoke_method(self, method, data, callback=None):
-        method_call = { "method" : method, "data" : data}
+        method_call = { "method" : method, "data" : data, "timestamp" : current_milli_time()}
         json_str = json.dumps(method_call, separators=(',',':'))
         base64_str = base64.b64encode(json_str.encode("utf8")).decode("utf8")
         await self.async_set({self.CALL_METHOD : base64_str}, callback)
@@ -141,4 +143,8 @@ class Robovac(TuyaDevice):
     async def async_clean_rooms(self, room_list, count=1, callback=None):
         clean_request = { "roomIds" : room_list, "cleanTimes" : count }
         await self.async_invoke_method("selectRoomsClean", clean_request)
+        
+    async def async_clean_spot(self, x, y, count = 1, callback=None):
+        spot_clean_request = { "target" : "spot", "cleanTimes" : count, "x" : x, "y" : x }
+        await self.async_invoke_method("goto", spot_clean_request)
         
