@@ -203,4 +203,9 @@ class EufyVacuum(VacuumEntity):
             count = params.get("count", 1)
 
             await self.robovac.async_clean_rooms(roomIds, count)
-        
+        elif command == "spotClean":
+            x = params.get("x", 0)
+            y = params.get("y", 0) 
+            count = params.get("count", 1)
+
+            await self.robovac.async_clean_spot(x, y, count) 
