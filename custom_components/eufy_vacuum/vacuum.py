@@ -213,6 +213,6 @@ class EufyVacuum(VacuumEntity):
             zone_list = params.get("zoneList")
             count = params.get("count", 1)
 
-            await self.robovac.async_clean_zone(zone_list count)
+            await self.robovac.async_clean_zone(zone_list, count)
 
 
