@@ -47,8 +47,11 @@ async def async_main(device_id, ip, local_key=None, *args, **kwargs):
     await asyncio.sleep(1)
 
     #await r.async_get_map_data(clean_callback)
-    await r.async_clean_rooms([2], 1, clean_callback)
+    #await r.async_clean_rooms([2], 1, clean_callback)
     
+    zone_list = [{"x0":-2702,"y0":-388,"x1":188,"y1":-388,"x2":188,"y2":-3369,"x3":-2702,"y3":-3369}]
+    
+    await r.async_clean_zone(zone_list, 1)
     await asyncio.sleep(5)
 
     print("Disconnecting...")

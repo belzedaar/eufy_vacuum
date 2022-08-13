@@ -147,4 +147,17 @@ class Robovac(TuyaDevice):
     async def async_clean_spot(self, x, y, count = 1, callback=None):
         spot_clean_request = { "target" : "spot", "cleanTimes" : count, "x" : x, "y" : x }
         await self.async_invoke_method("goto", spot_clean_request)
+
+    async def async_clean_zone(self, zone_points_list, count = 1, callback=None):
+        zone_data_list_to_send = []
+        id = 128
+        for zone_points in zone_points_list:
+            zone_request = { "cleanTimes:" : count, "type" : "sweep", "id" : id, "name" : ""}
+            zone_request.update(zone_points)
+            zone_data_list_to_send.append(zone_request)
+            id = id + 1
+
+        zone_clean_request = {"zones" : zone_data_list_to_send }
+        await self.async_invoke_method("selectZonesClean", zone_clean_request)
+
         
