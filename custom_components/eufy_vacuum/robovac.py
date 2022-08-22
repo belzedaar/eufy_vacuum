@@ -152,7 +152,7 @@ class Robovac(TuyaDevice):
         zone_data_list_to_send = []
         id = 128
         for zone_points in zone_points_list:
-            zone_request = { "cleanTimes:" : count, "type" : "sweep", "id" : id, "name" : ""}
+            zone_request = { "cleanTimes" : count, "type" : "sweep", "id" : id, "name" : ""}
             zone_request.update(zone_points)
             zone_data_list_to_send.append(zone_request)
             id = id + 1
