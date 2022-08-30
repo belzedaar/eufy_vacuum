@@ -169,7 +169,7 @@ class TuyaCipher:
     def get_prefix_size_and_validate(self, command, encrypted_data):
         try:
             version = tuple(map(int, encrypted_data[:3].decode('utf8').split('.')))
-        except UnicodeDecodeError:
+        except ValueError:
             version = (0, 0)
         if version != self.version:
             return 0
