@@ -1,11 +1,11 @@
 {
     "domain": "eufy_vacuum",
     "name": "Integration to Eufy Vacuum",
-    "documentation": "https://github.com/pbulteel/eufy_vacuum",
-    "issue_tracker": "https://github.com/pbulteel/eufy_vacuum/issues",
+    "documentation": "https://github.com/belzedaar/eufy_vacuum",
+    "issue_tracker": "https://github.com/belzedaar/eufy_vacuum/issues",
     "dependencies": [],
     "codeowners": [
-      "@pbulteel"
+      "@belzedaar"
     ],
     "requirements": ["cryptography"],
     "version": "1.0.4"
