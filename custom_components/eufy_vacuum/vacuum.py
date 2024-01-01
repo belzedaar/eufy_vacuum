@@ -11,7 +11,7 @@ from homeassistant.components.vacuum import (
     SUPPORT_BATTERY, SUPPORT_CLEAN_SPOT, SUPPORT_FAN_SPEED, SUPPORT_LOCATE,
     SUPPORT_PAUSE, SUPPORT_RETURN_HOME, SUPPORT_STATUS, SUPPORT_START,
     SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_SEND_COMMAND,
-    VacuumEntity)
+    StateVacuumEntity)
 
 
 from . import robovac
@@ -31,26 +31,16 @@ FAN_SPEEDS = {
 }
 
 
-SUPPORT_ROBOVAC_T2118 = (
-    SUPPORT_BATTERY | SUPPORT_CLEAN_SPOT | SUPPORT_FAN_SPEED | SUPPORT_LOCATE |
-    SUPPORT_PAUSE | SUPPORT_RETURN_HOME | SUPPORT_START | SUPPORT_STATUS |
-    SUPPORT_TURN_OFF | SUPPORT_TURN_ON  
-)
-
-SUPPORT_ROBOVAC_T218X = (
+SUPPORT_ROBOVAC_LR30 = (
     SUPPORT_BATTERY | SUPPORT_CLEAN_SPOT | SUPPORT_FAN_SPEED | SUPPORT_LOCATE |
     SUPPORT_PAUSE | SUPPORT_RETURN_HOME | SUPPORT_START | SUPPORT_STATUS |
     SUPPORT_TURN_OFF | SUPPORT_TURN_ON | SUPPORT_SEND_COMMAND  
 )
 
 MODEL_CONFIG = {
-    'T2118': {
+    'LR30': {
         'fan_speeds': FAN_SPEEDS,
-        'support': SUPPORT_ROBOVAC_T2118
-    },
-    'T218X': {
-        'fan_speeds': FAN_SPEEDS,
-        'support': SUPPORT_ROBOVAC_T218X
+        'support': SUPPORT_ROBOVAC_LR30
     }
 }
 
@@ -62,7 +52,7 @@ def setup_platform(hass, config, add_entities, device_config=None):
     add_entities([EufyVacuum(device_config)], True)
 
 
-class EufyVacuum(VacuumEntity):
+class EufyVacuum(StateVacuumEntity):
     """Representation of a Eufy vacuum cleaner."""
 
     def __init__(self, device_config):
@@ -123,7 +113,7 @@ class EufyVacuum(VacuumEntity):
         return self.robovac.battery_level
 
     @property
-    def status(self):
+    def state(self):
         """Return the status of the vacuum cleaner."""
         #if self.robovac.error_code != robovac.ErrorCode.NO_ERROR:
         #    return STATE_ERROR
