@@ -43,7 +43,7 @@ eufy_vacuum:
     address: 192.168.1.80
     access_token: YOUR LOCAL KEY HERE
     id: YOUR DEVICE ID HERE
-    type: T2118
+    type: LR30
 ```
 It looks like you need an older version of the EufyHome app to be able to get the LOCAL KEY and DEVICE ID. 
 
