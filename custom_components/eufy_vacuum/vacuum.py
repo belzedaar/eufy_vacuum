@@ -8,10 +8,8 @@ from homeassistant.components.vacuum import (
     PLATFORM_SCHEMA,
     STATE_CLEANING, STATE_DOCKED, STATE_IDLE, STATE_PAUSED, STATE_RETURNING,
     STATE_ERROR,
-    SUPPORT_BATTERY, SUPPORT_CLEAN_SPOT, SUPPORT_FAN_SPEED, SUPPORT_LOCATE,
-    SUPPORT_PAUSE, SUPPORT_RETURN_HOME, SUPPORT_STATUS, SUPPORT_START,
-    SUPPORT_TURN_ON, SUPPORT_TURN_OFF, SUPPORT_SEND_COMMAND,
-    StateVacuumEntity)
+    StateVacuumEntity, 
+    VacuumEntityFeature)
 
 
 from . import robovac
@@ -32,9 +30,9 @@ FAN_SPEEDS = {
 
 
 SUPPORT_ROBOVAC_LR30 = (
-    SUPPORT_BATTERY | SUPPORT_CLEAN_SPOT | SUPPORT_FAN_SPEED | SUPPORT_LOCATE |
-    SUPPORT_PAUSE | SUPPORT_RETURN_HOME | SUPPORT_START | SUPPORT_STATUS |
-    SUPPORT_TURN_OFF | SUPPORT_TURN_ON | SUPPORT_SEND_COMMAND  
+    VacuumEntityFeature.BATTERY | VacuumEntityFeature.CLEAN_SPOT | VacuumEntityFeature.FAN_SPEED | VacuumEntityFeature.LOCATE |
+    VacuumEntityFeature.PAUSE | VacuumEntityFeature.RETURN_HOME | VacuumEntityFeature.START | VacuumEntityFeature.STATUS |
+    VacuumEntityFeature.TURN_OFF | VacuumEntityFeature.TURN_ON | VacuumEntityFeature.SEND_COMMAND  
 )
 
 MODEL_CONFIG = {
